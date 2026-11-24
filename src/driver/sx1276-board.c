@@ -40,7 +40,7 @@ RTC_DATA_ATTR static bool RadioIsActive = false;
 /*!
  * Radio driver structure initialization
  */
-const struct Radio_s Radio =
+const struct Radio_sx127x_s Radio =
 {
     SX1276Init,
     SX1276GetStatus,

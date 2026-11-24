@@ -96,7 +96,7 @@ typedef struct
 /*!
  * \brief Radio driver definition
  */
-struct Radio_s
+struct Radio_sx127x_s
 {
     /*!
      * \brief Initializes the radio
@@ -351,6 +351,6 @@ struct Radio_s
  * \remark This variable is defined and initialized in the specific radio
  *         board implementation
  */
-extern const struct Radio_s Radio;
+extern const struct Radio_sx127x_s Radio;
 
 #endif // __RADIO_H__
