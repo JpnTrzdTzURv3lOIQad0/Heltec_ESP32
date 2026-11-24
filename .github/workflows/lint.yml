@@ -24,6 +24,7 @@ jobs:
         run: |
           cppcheck --version
           cppcheck --language=c++ --error-exitcode=1 --inline-suppr \
+            -DESP32 \
             -DRTC_DATA_ATTR= \
             --suppress=missingInclude --suppress=missingIncludeSystem \
             --quiet src
@@ -33,6 +34,7 @@ jobs:
         continue-on-error: true
         run: |
           cppcheck --language=c++ --enable=warning,portability --inline-suppr \
+            -DESP32 \
             -DRTC_DATA_ATTR= \
             --suppress=missingInclude --suppress=missingIncludeSystem \
             --quiet src

@@ -483,7 +483,7 @@ RTC_DATA_ATTR LoRaMacCallback_t LoRaMacCallback;
 
 void LoRaWanClass::generateDeveuiByChipID()
 {
-	uint32_t uniqueId[2];
+	uint32_t uniqueId[2] = {0, 0};
 #if defined(ESP_PLATFORM)
 	uint64_t id = getID();
 	uniqueId[0]=(uint32_t)(id>>32);
@@ -826,15 +826,18 @@ void lora_printf(const char *format, ...)
     va_list copy;
     va_start(arg, format);
     va_copy(copy, arg);
-    size_t len = vsnprintf(NULL, 0, format, arg);
+    size_t len = vsnprintf(NULL, 0, format, copy);
     va_end(copy);
     if(len >= sizeof(loc_buf)){
         temp = new char[len+1];
         if(temp == NULL) {
+            va_end(arg);
             return ;
         }
     }
-    len = vsnprintf(temp, len+1, format, arg);
+    va_copy(copy, arg);
+    len = vsnprintf(temp, len+1, format, copy);
+    va_end(copy);
     Serial.write((uint8_t*)temp, len);
     va_end(arg);
     if(len > 64){
