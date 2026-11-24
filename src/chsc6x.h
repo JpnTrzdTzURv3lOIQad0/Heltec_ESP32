@@ -27,7 +27,7 @@ private:
 #endif
 
 public:
-    chsc6x(TwoWire *wire = &Wire1, int sda_pin = -1, int scl_pin = -1, int int_pin = -1, int rst_pin = -1)
+    chsc6x(TwoWire *wire = CHSC6X_DEFAULT_WIRE, int sda_pin = -1, int scl_pin = -1, int int_pin = -1, int rst_pin = -1)
         : chsc6x_platform(wire, sda_pin, scl_pin, int_pin, rst_pin)
     {
     };
