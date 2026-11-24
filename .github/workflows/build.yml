@@ -70,7 +70,7 @@ jobs:
           BOARD_ID: ${{ matrix.board_id }}
         run: |
           set -euo pipefail
-          flags="-DHELTEC_BOARD=$BOARD_ID -D$BOARD -DSLOW_CLK_TPYE=0 -DLoRaWAN_DEBUG_LEVEL=0"
+          flags="-MMD -c -DHELTEC_BOARD=$BOARD_ID -D$BOARD -DSLOW_CLK_TPYE=0 -DLoRaWAN_DEBUG_LEVEL=0"
           for sketch in \
             examples/ESP32/GetChipID \
             examples/LoRaBasic/LoRaSender \
