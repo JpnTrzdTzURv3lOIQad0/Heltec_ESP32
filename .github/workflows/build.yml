@@ -26,7 +26,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # One entry per chip that has a prebuilt liblorawan.a in src/.
+        # One entry per chip that has a prebuilt liblorawan.a in src/ and a
+        # board in the Heltec core. esp32c6 is left out because Heltec 3.3.8
+        # has no heltec_rcc6 board.
         include:
           - chip: esp32
             fqbn: Heltec-esp32:esp32:heltec_wifi_lora_32_V2
