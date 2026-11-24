@@ -17,8 +17,8 @@
 #define chsc6x_info Serial.printf
 #define chsc6x_err Serial.printf
 #else
-#define chsc6x_info       
-#define chsc6x_err      
+#define chsc6x_info(...)  do {} while (0)
+#define chsc6x_err(...)   do {} while (0)
 #endif
 
 

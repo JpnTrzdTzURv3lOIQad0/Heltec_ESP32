@@ -3,6 +3,7 @@
 
 
 GXHTC::GXHTC()
+  : _address(GXHTC_ADDRESS)
 {
 }
 

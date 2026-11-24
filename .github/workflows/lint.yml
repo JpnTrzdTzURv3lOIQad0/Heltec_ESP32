@@ -17,66 +17,16 @@ jobs:
       - name: Install cppcheck
         run: sudo apt-get update && sudo apt-get install -y cppcheck
 
-      # Blocking: fails only on cppcheck "error" severity findings.
+      # Blocking: fails on cppcheck error and warning/portability findings.
       # Arduino/ESP32 headers are not available, so missing-include
       # notices are suppressed.
-      - name: cppcheck (errors)
+      - name: cppcheck
         run: |
           cppcheck --version
-          python3 - <<'PY'
-          import subprocess
-          import sys
-          import xml.etree.ElementTree as ET
-
-          result = subprocess.run(
-              [
-                  "cppcheck",
-                  "--language=c++",
-                  "--error-exitcode=0",
-                  "--xml",
-                  "--inline-suppr",
-                  "-DESP32",
-                  "-DRTC_DATA_ATTR=",
-                  "--suppress=missingInclude",
-                  "--suppress=missingIncludeSystem",
-                  "--quiet",
-                  "src",
-              ],
-              capture_output=True,
-              text=True,
-          )
-          if result.returncode:
-              sys.stderr.write(result.stderr)
-              sys.exit(result.returncode)
-
-          try:
-              diagnostics = ET.fromstring(result.stderr)
-          except ET.ParseError:
-              sys.stderr.write(result.stderr)
-              sys.exit(1)
-
-          errors = [
-              error
-              for error in diagnostics.findall("./errors/error")
-              if error.get("severity") == "error"
-          ]
-          if errors:
-              for error in errors:
-                  location = error.find("location")
-                  filename = location.get("file", "") if location is not None else ""
-                  line = location.get("line", "") if location is not None else ""
-                  print(
-                      f"{filename}:{line}: error: {error.get('msg', '')}",
-                      file=sys.stderr,
-                  )
-              sys.exit(1)
-          PY
-
-      # Non-blocking: reports warning/portability findings for visibility.
-      - name: cppcheck (warnings, informational)
-        continue-on-error: true
-        run: |
-          cppcheck --language=c++ --enable=warning,portability --inline-suppr \
+          cppcheck --language=c++ \
+            --enable=warning,portability \
+            --error-exitcode=1 \
+            --inline-suppr \
             -DESP32 \
             -DRTC_DATA_ATTR= \
             --suppress=missingInclude --suppress=missingIncludeSystem \

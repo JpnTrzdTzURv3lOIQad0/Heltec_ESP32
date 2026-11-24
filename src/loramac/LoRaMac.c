@@ -2070,7 +2070,7 @@ static LoRaMacStatus_t AddMacCommand( uint8_t cmd, uint8_t p1, uint8_t p2 )
             }
             break;
         case MOTE_MAC_PING_SLOT_FREQ_ANS:
-            if( MacCommandsBufferIndex < LORA_MAC_COMMAND_MAX_LENGTH )
+            if( MacCommandsBufferIndex < ( LORA_MAC_COMMAND_MAX_LENGTH - 1 ) )
             {
                 MacCommandsBuffer[MacCommandsBufferIndex++] = cmd;
                 // Status: Datarate range OK, Channel frequency OK
@@ -2088,7 +2088,7 @@ static LoRaMacStatus_t AddMacCommand( uint8_t cmd, uint8_t p1, uint8_t p2 )
             }
             break;
         case MOTE_MAC_BEACON_FREQ_ANS:
-            if( MacCommandsBufferIndex < LORA_MAC_COMMAND_MAX_LENGTH )
+            if( MacCommandsBufferIndex < ( LORA_MAC_COMMAND_MAX_LENGTH - 1 ) )
             {
                 MacCommandsBuffer[MacCommandsBufferIndex++] = cmd;
                 // Status: Channel frequency OK

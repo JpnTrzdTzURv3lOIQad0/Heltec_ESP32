@@ -84,6 +84,8 @@ static int8_t GetMaxEIRP( uint32_t freq )
 
 static uint32_t GetBandwidth( uint32_t drIndex )
 {
+    // DR_7 (FSK) is outside the 6-entry LoRa tables
+    // cppcheck-suppress arrayIndexOutOfBoundsCond
     switch( BandwidthsKR920[drIndex] )
     {
         default:
@@ -569,6 +571,8 @@ void RegionKR920ComputeRxWindowParameters( int8_t datarate, uint8_t minRxSymbols
 
     if( datarate == DR_7 )
     { // FSK
+        // DR_7 (FSK) is outside the 6-entry LoRa tables
+        // cppcheck-suppress arrayIndexOutOfBoundsCond
         tSymbol = RegionCommonComputeSymbolTimeFsk( DataratesKR920[datarate] );
     }
     else

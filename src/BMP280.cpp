@@ -29,7 +29,7 @@
  *         optional wire
  */
 BMP280::BMP280(TwoWire *theWire)
-    : _cs(-1), _mosi(-1), _miso(-1), _sck(-1) {
+    : _spi(nullptr), _i2caddr(0), _sensorID(0), t_fine(0), _cs(-1), _mosi(-1), _miso(-1), _sck(-1), _bmp280_calib(), _configReg(), _measReg() {
   _wire = theWire;
 }
 

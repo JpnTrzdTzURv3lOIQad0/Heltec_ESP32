@@ -44,7 +44,7 @@
 HT_ST7789::HT_ST7789(uint16_t w, uint16_t h, int8_t cs, int8_t dc,
                      int8_t mosi, int8_t sclk, int8_t rst,
                      int8_t miso)
-  : Adafruit_SPITFT(w, h, cs, dc, mosi, sclk, rst, miso) {}
+  : Adafruit_SPITFT(w, h, cs, dc, mosi, sclk, rst, miso), windowWidth(0), windowHeight(0) {}
 
 /**************************************************************************/
 /*!
@@ -58,7 +58,7 @@ HT_ST7789::HT_ST7789(uint16_t w, uint16_t h, int8_t cs, int8_t dc,
 /**************************************************************************/
 HT_ST7789::HT_ST7789(uint16_t w, uint16_t h, int8_t cs, int8_t dc,
                      int8_t rst)
-  : Adafruit_SPITFT(w, h, cs, dc, rst) {}
+  : Adafruit_SPITFT(w, h, cs, dc, rst), windowWidth(0), windowHeight(0) {}
 
 #if !defined(ESP8266)
 /**************************************************************************/
@@ -74,7 +74,7 @@ HT_ST7789::HT_ST7789(uint16_t w, uint16_t h, int8_t cs, int8_t dc,
 /**************************************************************************/
 HT_ST7789::HT_ST7789(uint16_t w, uint16_t h, SPIClass *spiClass,
                      int8_t cs, int8_t dc, int8_t rst)
-  : Adafruit_SPITFT(w, h, spiClass, cs, dc, rst) {
+  : Adafruit_SPITFT(w, h, spiClass, cs, dc, rst), windowWidth(0), windowHeight(0) {
 
 
 

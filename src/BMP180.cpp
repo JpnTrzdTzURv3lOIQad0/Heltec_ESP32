@@ -1,6 +1,8 @@
 #include "BMP180.h"
 
-BMP085::BMP085() {
+BMP085::BMP085()
+  : oversampling(0), ac1(0), ac2(0), ac3(0), ac4(0), ac5(0), ac6(0),
+    b1(0), b2(0), mb(0), mc(0), md(0) {
 }
 
 

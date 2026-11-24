@@ -65,7 +65,7 @@ public:
    Quality FixQuality()           { updated = false; return fixQuality; }
    Mode FixMode()                 { updated = false; return fixMode; }
 
-   TinyGPSLocation() : valid(false), updated(false), fixQuality(Invalid), fixMode(N)
+   TinyGPSLocation() : valid(false), updated(false), fixQuality(Invalid), newFixQuality(Invalid), fixMode(N), newFixMode(N), lastCommitTime(0)
    {}
 
 private:
@@ -92,7 +92,7 @@ public:
    uint8_t month();
    uint8_t day();
 
-   TinyGPSDate() : valid(false), updated(false), date(0)
+   TinyGPSDate() : valid(false), updated(false), date(0), newDate(0), lastCommitTime(0)
    {}
 
 private:
@@ -117,7 +117,7 @@ public:
    uint8_t second();
    uint8_t centisecond();
 
-   TinyGPSTime() : valid(false), updated(false), time(0)
+   TinyGPSTime() : valid(false), updated(false), time(0), newTime(0), lastCommitTime(0)
    {}
 
 private:
@@ -137,7 +137,7 @@ public:
    uint32_t age() const    { return valid ? millis() - lastCommitTime : (uint32_t)ULONG_MAX; }
    int32_t value()         { updated = false; return val; }
 
-   TinyGPSDecimal() : valid(false), updated(false), val(0)
+   TinyGPSDecimal() : valid(false), updated(false), lastCommitTime(0), val(0), newval(0)
    {}
 
 private:
@@ -157,7 +157,7 @@ public:
    uint32_t age() const    { return valid ? millis() - lastCommitTime : (uint32_t)ULONG_MAX; }
    uint32_t value()        { updated = false; return val; }
 
-   TinyGPSInteger() : valid(false), updated(false), val(0)
+   TinyGPSInteger() : valid(false), updated(false), lastCommitTime(0), val(0), newval(0)
    {}
 
 private:

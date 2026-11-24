@@ -17,7 +17,7 @@
  *
  * On most sensor boards, it was 0x76
  */
-BH1750::BH1750(byte addr) {
+BH1750::BH1750(byte addr) : _rst(-1) {
 
   BH1750_I2CADDR = addr;
 
