@@ -1,0 +1,74 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # Framework version listed in README.md.
+  ESP32_CORE_VERSION: 3.0.2
+
+jobs:
+  build:
+    name: Build examples (${{ matrix.chip }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # One entry per chip that has a prebuilt liblorawan.a in src/.
+        include:
+          - chip: esp32
+            fqbn: esp32:esp32:esp32
+          - chip: esp32s3
+            fqbn: esp32:esp32:esp32s3
+          - chip: esp32c3
+            fqbn: esp32:esp32:esp32c3
+          - chip: esp32c6
+            fqbn: esp32:esp32:esp32c6
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
+
+      - name: Install ESP32 Arduino core
+        run: |
+          arduino-cli config set board_manager.additional_urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install "esp32:esp32@${ESP32_CORE_VERSION}"
+
+      - name: Install library dependencies
+        run: arduino-cli lib install "Adafruit GFX Library" "Adafruit BusIO"
+
+      # Sketches are compiled against this checkout via --library.
+      # Add examples here only if they build with the core and library alone.
+      - name: Compile examples
+        env:
+          FQBN: ${{ matrix.fqbn }}
+          CHIP: ${{ matrix.chip }}
+        run: |
+          set -euo pipefail
+          for sketch in \
+            examples/ESP32/GetChipID \
+            examples/LoRaBasic/LoRaSender \
+            examples/LoRaBasic/LoRaReceiver \
+            examples/2.4G_RF/WiFi_Test; do
+            name=$(basename "$sketch")
+            arduino-cli compile \
+              --fqbn "$FQBN" \
+              --library . \
+              --output-dir "build/$CHIP/$name" \
+              "$sketch"
+          done
+
+      - name: Upload firmware binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.chip }}
+          path: build/${{ matrix.chip }}/
+          if-no-files-found: error
