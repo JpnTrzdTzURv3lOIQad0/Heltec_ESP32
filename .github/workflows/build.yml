@@ -10,8 +10,9 @@ permissions:
   contents: read
 
 env:
-  # Framework version listed in README.md.
-  ESP32_CORE_VERSION: 3.0.2
+  # Heltec board package (provides HELTEC_BOARD, RADIO_CHIP_* and pin macros).
+  HELTEC_CORE_VERSION: 3.3.8
+  HELTEC_INDEX_URL: https://resource.heltec.cn/download/package_heltec_esp32_index.json
 
 jobs:
   # Builds only run when the lint workflow passes.
@@ -28,49 +29,34 @@ jobs:
         # One entry per chip that has a prebuilt liblorawan.a in src/.
         include:
           - chip: esp32
-            fqbn: esp32:esp32:esp32
-            board: WIFI_LORA_32_V2
-            board_id: 0
+            fqbn: Heltec-esp32:esp32:heltec_wifi_lora_32_V2
           - chip: esp32s3
-            fqbn: esp32:esp32:esp32s3
-            board: WIFI_LORA_32_V3
-            board_id: 30
+            fqbn: Heltec-esp32:esp32:heltec_wifi_lora_32_V3
           - chip: esp32c3
-            fqbn: esp32:esp32:esp32c3
-            board: WIRELESS_MINI_SHELL
-            board_id: 70
-          - chip: esp32c6
-            fqbn: esp32:esp32:esp32c6
-            board: HELTEC_RCC6
-            board_id: 81
+            fqbn: Heltec-esp32:esp32:heltec_wireless_mini_shell
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Arduino CLI
         uses: arduino/setup-arduino-cli@v2
 
-      - name: Install ESP32 Arduino core
+      - name: Install Heltec ESP32 Arduino core
         run: |
-          arduino-cli config set board_manager.additional_urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+          arduino-cli config set board_manager.additional_urls "$HELTEC_INDEX_URL"
           arduino-cli core update-index
-          arduino-cli core install "esp32:esp32@${ESP32_CORE_VERSION}"
+          arduino-cli core install "Heltec-esp32:esp32@${HELTEC_CORE_VERSION}"
 
       - name: Install library dependencies
         run: arduino-cli lib install "Adafruit GFX Library" "Adafruit BusIO"
 
       # Sketches are compiled against this checkout via --library.
       # Add examples here only if they build with the core and library alone.
-      # Board macros (matching src/ESP32_Mcu.h and src/driver/board-config.h) are
-      # passed as build flags because the library reads them at compile time.
       - name: Compile examples
         env:
           FQBN: ${{ matrix.fqbn }}
           CHIP: ${{ matrix.chip }}
-          BOARD: ${{ matrix.board }}
-          BOARD_ID: ${{ matrix.board_id }}
         run: |
           set -euo pipefail
-          flags="-MMD -c -DHELTEC_BOARD=$BOARD_ID -D$BOARD -DSLOW_CLK_TPYE=0 -DLoRaWAN_DEBUG_LEVEL=0"
           for sketch in \
             examples/ESP32/GetChipID \
             examples/LoRaBasic/LoRaSender \
@@ -80,8 +66,6 @@ jobs:
             arduino-cli compile \
               --fqbn "$FQBN" \
               --library . \
-              --build-property "compiler.c.extra_flags=$flags" \
-              --build-property "compiler.cpp.extra_flags=$flags" \
               --output-dir "build/$CHIP/$name" \
               "$sketch"
           done
