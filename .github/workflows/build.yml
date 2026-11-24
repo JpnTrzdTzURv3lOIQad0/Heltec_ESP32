@@ -29,12 +29,20 @@ jobs:
         include:
           - chip: esp32
             fqbn: esp32:esp32:esp32
+            board: WIFI_LORA_32_V2
+            board_id: 0
           - chip: esp32s3
             fqbn: esp32:esp32:esp32s3
+            board: WIFI_LORA_32_V3
+            board_id: 30
           - chip: esp32c3
             fqbn: esp32:esp32:esp32c3
+            board: WIRELESS_MINI_SHELL
+            board_id: 70
           - chip: esp32c6
             fqbn: esp32:esp32:esp32c6
+            board: HELTEC_RCC6
+            board_id: 81
     steps:
       - uses: actions/checkout@v4
 
@@ -52,12 +60,17 @@ jobs:
 
       # Sketches are compiled against this checkout via --library.
       # Add examples here only if they build with the core and library alone.
+      # Board macros (matching src/ESP32_Mcu.h and src/driver/board-config.h) are
+      # passed as build flags because the library reads them at compile time.
       - name: Compile examples
         env:
           FQBN: ${{ matrix.fqbn }}
           CHIP: ${{ matrix.chip }}
+          BOARD: ${{ matrix.board }}
+          BOARD_ID: ${{ matrix.board_id }}
         run: |
           set -euo pipefail
+          flags="-DHELTEC_BOARD=$BOARD_ID -D$BOARD -DSLOW_CLK_TPYE=0 -DLoRaWAN_DEBUG_LEVEL=0"
           for sketch in \
             examples/ESP32/GetChipID \
             examples/LoRaBasic/LoRaSender \
@@ -67,6 +80,8 @@ jobs:
             arduino-cli compile \
               --fqbn "$FQBN" \
               --library . \
+              --build-property "compiler.c.extra_flags=$flags" \
+              --build-property "compiler.cpp.extra_flags=$flags" \
               --output-dir "build/$CHIP/$name" \
               "$sketch"
           done
