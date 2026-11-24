@@ -155,7 +155,8 @@ static uint8_t CountNbOfEnabledChannels( bool joined, uint8_t datarate, uint16_t
 
 PhyParam_t RegionAS923GetPhyParam( GetPhyParams_t* getPhy )
 {
-    PhyParam_t phyParam = { 0 };
+    PhyParam_t phyParam;
+    phyParam.Value = 0;
 
     switch( getPhy->Attribute )
     {
