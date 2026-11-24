@@ -188,7 +188,7 @@ void LoRaMacJoinDecrypt( const uint8_t *buffer, uint16_t size, const uint8_t *ke
 void LoRaMacJoinComputeSKeys( const uint8_t *key, const uint8_t *appNonce, uint16_t devNonce, uint8_t *nwkSKey, uint8_t *appSKey )
 {
     uint8_t nonce[16];
-    uint8_t *pDevNonce = ( uint8_t * )&devNonce;
+    uint8_t *pDevNonce = ( uint8_t * ) ( void * ) &devNonce;
     
     memset1( AesContext.ksch, '\0', 240 );
     lorawan_aes_set_key( key, 16, &AesContext );

@@ -313,7 +313,7 @@ void HT_st7736::st7735_draw_image(uint16_t x, uint16_t y, uint16_t w, uint16_t h
 
     st7735_select();
     st7735_set_address_window(x, y, x+w-1, y+h-1);
-    st7735_write_data((uint8_t*)data, sizeof(uint16_t)*w*h);
+    st7735_write_data(reinterpret_cast<uint8_t*>(const_cast<uint16_t*>(data)), sizeof(uint16_t)*w*h);
     st7735_unselect();
 }
 
