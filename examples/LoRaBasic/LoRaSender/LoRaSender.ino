@@ -16,6 +16,15 @@
 #include "LoRaWan_APP.h"
 #include "Arduino.h"
 
+// Defaults so the sketch compiles without board-specific build flags.
+// Override HELTEC_BOARD with your board ID from src/ESP32_Mcu.h.
+#ifndef HELTEC_BOARD
+#define HELTEC_BOARD                                30
+#endif
+#ifndef SLOW_CLK_TPYE
+#define SLOW_CLK_TPYE                               0         // 0: internal slow clock
+#endif
+
 
 #define RF_FREQUENCY                                915000000 // Hz
 
