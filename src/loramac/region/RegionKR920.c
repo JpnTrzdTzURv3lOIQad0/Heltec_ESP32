@@ -84,6 +84,7 @@ static int8_t GetMaxEIRP( uint32_t freq )
 
 static uint32_t GetBandwidth( uint32_t drIndex )
 {
+    // DR_7 (FSK) is outside the 6-entry LoRa tables
     switch( BandwidthsKR920[drIndex] )
     {
         default:
@@ -175,7 +176,8 @@ static uint8_t CountNbOfEnabledChannels( bool joined, uint8_t datarate, uint16_t
 
 PhyParam_t RegionKR920GetPhyParam( GetPhyParams_t* getPhy )
 {
-    PhyParam_t phyParam = { 0 };
+    PhyParam_t phyParam;
+    phyParam.Value = 0;
 
     switch( getPhy->Attribute )
     {
@@ -567,14 +569,7 @@ void RegionKR920ComputeRxWindowParameters( int8_t datarate, uint8_t minRxSymbols
     rxConfigParams->Datarate = datarate;
     rxConfigParams->Bandwidth = GetBandwidth( datarate );
 
-    if( datarate == DR_7 )
-    { // FSK
-        tSymbol = RegionCommonComputeSymbolTimeFsk( DataratesKR920[datarate] );
-    }
-    else
-    { // LoRa
-        tSymbol = RegionCommonComputeSymbolTimeLoRa( DataratesKR920[datarate], BandwidthsKR920[datarate] );
-    }
+    tSymbol = RegionCommonComputeSymbolTimeLoRa( DataratesKR920[datarate], BandwidthsKR920[datarate] );
 
     radioWakeUpTime = Radio.GetWakeupTime( );
     RegionCommonComputeRxWindowParameters( tSymbol, minRxSymbols, rxError, radioWakeUpTime, &rxConfigParams->WindowTimeout, &rxConfigParams->WindowOffset );
@@ -651,7 +646,7 @@ bool RegionKR920TxConfig( TxConfigParams_t* txConfig, int8_t* txPower, TimerTime
 uint8_t RegionKR920LinkAdrReq( LinkAdrReqParams_t* linkAdrReq, int8_t* drOut, int8_t* txPowOut, uint8_t* nbRepOut, uint8_t* nbBytesParsed )
 {
     uint8_t status = 0x07;
-    LinkAdrParams_t linkAdrParams;
+    LinkAdrParams_t linkAdrParams = { 0 };
     uint8_t nextIndex = 0;
     uint8_t bytesProcessed = 0;
     uint16_t chMask = 0;

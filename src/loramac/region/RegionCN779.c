@@ -155,7 +155,8 @@ static uint8_t CountNbOfEnabledChannels( bool joined, uint8_t datarate, uint16_t
 
 PhyParam_t RegionCN779GetPhyParam( GetPhyParams_t* getPhy )
 {
-    PhyParam_t phyParam = { 0 };
+    PhyParam_t phyParam;
+    phyParam.Value = 0;
 
     switch( getPhy->Attribute )
     {
@@ -644,7 +645,7 @@ bool RegionCN779TxConfig( TxConfigParams_t* txConfig, int8_t* txPower, TimerTime
 uint8_t RegionCN779LinkAdrReq( LinkAdrReqParams_t* linkAdrReq, int8_t* drOut, int8_t* txPowOut, uint8_t* nbRepOut, uint8_t* nbBytesParsed )
 {
     uint8_t status = 0x07;
-    LinkAdrParams_t linkAdrParams;
+    LinkAdrParams_t linkAdrParams = { 0 };
     uint8_t nextIndex = 0;
     uint8_t bytesProcessed = 0;
     uint16_t chMask = 0;

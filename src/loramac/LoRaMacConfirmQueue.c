@@ -117,7 +117,7 @@ void LoRaMacConfirmQueueInit( LoRaMacPrimitives_t* primitives )
     BufferStart = MlmeConfirmQueue;
     BufferEnd = MlmeConfirmQueue;
 
-    memset1( (uint8_t*) MlmeConfirmQueue, 0xFF, sizeof( MlmeConfirmQueue ) );
+    memset1( (uint8_t*) (void*) MlmeConfirmQueue, 0xFF, sizeof( MlmeConfirmQueue ) );
 
     // Common status
     CommonStatus = LORAMAC_EVENT_INFO_STATUS_ERROR;

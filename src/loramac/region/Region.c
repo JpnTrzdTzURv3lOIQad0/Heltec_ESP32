@@ -657,7 +657,8 @@ bool RegionIsActive( LoRaMacRegion_t region )
 
 PhyParam_t RegionGetPhyParam( LoRaMacRegion_t region, GetPhyParams_t* getPhy )
 {
-    PhyParam_t phyParam = { 0 };
+    PhyParam_t phyParam;
+    phyParam.Value = 0;
     switch( region )
     {
         AS923_GET_PHY_PARAM( );

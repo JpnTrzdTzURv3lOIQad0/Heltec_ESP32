@@ -1,0 +1,34 @@
+name: Lint
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  cppcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+
+      # Blocking: fails on cppcheck error and warning/portability findings.
+      # Arduino/ESP32 headers are not available, so missing-include
+      # notices are suppressed.
+      - name: cppcheck
+        run: |
+          cppcheck --version
+          cppcheck --language=c++ \
+            --enable=warning,portability \
+            --error-exitcode=1 \
+            --inline-suppr \
+            -DESP32 \
+            -DRTC_DATA_ATTR= \
+            --suppress=missingInclude --suppress=missingIncludeSystem \
+            --quiet src

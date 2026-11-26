@@ -6,6 +6,11 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include <Wire.h>
+#if SOC_I2C_NUM > 1
+#define CHSC6X_DEFAULT_WIRE &Wire1
+#else
+#define CHSC6X_DEFAULT_WIRE &Wire
+#endif
 
 #define OS_OK                    (0)
 #define OS_ERROR                 (1)
@@ -17,8 +22,8 @@
 #define chsc6x_info Serial.printf
 #define chsc6x_err Serial.printf
 #else
-#define chsc6x_info       
-#define chsc6x_err      
+#define chsc6x_info(...)  do {} while (0)
+#define chsc6x_err(...)   do {} while (0)
 #endif
 
 
@@ -56,7 +61,7 @@ private:
     int _rst_pin;
 public:
     uint8_t _i2c_addr;
-    chsc6x_platform(TwoWire *wire = &Wire1,int sda_pin=-1,int scl_pin=-1,int int_pin=-1,int rst_pin=-1) {
+    chsc6x_platform(TwoWire *wire = CHSC6X_DEFAULT_WIRE,int sda_pin=-1,int scl_pin=-1,int int_pin=-1,int rst_pin=-1) {
         this->_wire = wire;
         this->_sda_pin = sda_pin;
         this->_scl_pin = scl_pin;

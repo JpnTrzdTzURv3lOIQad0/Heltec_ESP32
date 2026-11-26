@@ -29,7 +29,7 @@
  *         optional wire
  */
 BMP280::BMP280(TwoWire *theWire)
-    : _cs(-1), _mosi(-1), _miso(-1), _sck(-1) {
+    : _spi(nullptr), _i2caddr(0), _sensorID(0), t_fine(0), _cs(-1), _mosi(-1), _miso(-1), _sck(-1), _bmp280_calib(), _configReg(), _measReg() {
   _wire = theWire;
 }
 
@@ -176,7 +176,7 @@ void BMP280::write8(byte reg, byte value) {
  *  @return value from selected register
  */
 uint8_t BMP280::read8(byte reg) {
-  uint8_t value;
+  uint8_t value = 0;
 
   if (_cs == -1) {
     _wire->beginTransmission((uint8_t)_i2caddr);
@@ -202,7 +202,7 @@ uint8_t BMP280::read8(byte reg) {
  *  @brief  Reads a 16 bit value over I2C/SPI
  */
 uint16_t BMP280::read16(byte reg) {
-  uint16_t value;
+  uint16_t value = 0;
 
   if (_cs == -1) {
     _wire->beginTransmission((uint8_t)_i2caddr);
@@ -243,7 +243,7 @@ int16_t BMP280::readS16_LE(byte reg) {
  *  @brief  Reads a 24 bit value over I2C/SPI
  */
 uint32_t BMP280::read24(byte reg) {
-  uint32_t value;
+  uint32_t value = 0;
 
   if (_cs == -1) {
     _wire->beginTransmission((uint8_t)_i2caddr);

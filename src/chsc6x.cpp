@@ -51,11 +51,6 @@ int chsc6x::chsc6x_read_touch_info(uint16_t *touchX, uint16_t *touchY)
                 point_num, events[0].x, events[0].y, events[0].flag, events[0].id);
     chsc6x_info("chsc6x: point_num:%d, X2:%d, Y2:%d, flag2:%d, id2:%d; \r\n", \
                 point_num, events[1].x, events[1].y, events[1].flag, events[1].id);
-
-    if(0 == point_num)
-    {
-        chsc6x_info("chsc6x: all point up\r\n");
-    }
   }
 
     return OS_OK;

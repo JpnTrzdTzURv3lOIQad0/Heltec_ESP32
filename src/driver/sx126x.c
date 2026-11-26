@@ -16,7 +16,7 @@ typedef struct
 {
     uint16_t      Addr;                             //!< The address of the register
     uint8_t       Value;                            //!< The value of the register
-}RadioRegisters_t;
+}SX126xRadioRegisters_t;
 
 /*!
  * \brief Holds the internal operating mode of the radio
